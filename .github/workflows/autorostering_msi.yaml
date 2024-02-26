@@ -26,22 +26,22 @@ jobs:
         name: migrations.sql
         path: ${{github.workspace}}/WEB/Backend/ESolve/ESolve/migrations.sql
 
-    # - name: Copy files to root and create AR folder
-    #   run: |
-    #     mkdir AutoRostering
-    #     mkdir AutoRostering/api
-    #     cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./AutoRostering/api/
-    #     cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
-    #     cp -r ./WEB/Frontend/dist/* ./AutoRostering/
+    - name: Copy files to root and create AR folder
+      run: |
+        mkdir AutoRostering
+        mkdir AutoRostering/api
+        cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./AutoRostering/api/
+        cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
+        cp -r ./WEB/Frontend/dist/* ./AutoRostering/
         
-    # - name: setup .net core
-    #   uses: actions/setup-dotnet@v3
-    #   with:
-    #     dotnet-version: 6.0.x
+    - name: setup .net core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
 
-    # - name: Build MSI
-    #   working-directory: ${{github.workspace}}
-    #   run: dotnet build AutoRosteringSetup.sln -c Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
+    - name: Build MSI
+      working-directory: ${{github.workspace}}
+      run: dotnet build AutoRosteringSetup.sln -c Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
   
     # - name: Copy files to root and create AR folder
     #   run: |
