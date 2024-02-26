@@ -1,0 +1,12 @@
+﻿<Include xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  
+  <PropertyRef Id="IIS_MAJOR_VERSION" />
+  <PropertyRef Id="ASPNET_HOSTING_BUNDLE" />
+
+  <Launch Condition="IIS_MAJOR_VERSION" Message="Auto Rostering requires IIS to be installed." />
+  
+  <Launch Condition="ASPNET_HOSTING_BUNDLE" Message="Auto Rostering requires ASP.NET Core v6.0.13 Hosting Bundle to be installed." />
+
+  <!--<Launch Condition="Installed OR Privileged" Message="You need to be an administrator to install this product."/>-->
+
+</Include>

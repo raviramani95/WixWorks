@@ -1,0 +1,9 @@
+﻿.vs
+AutoRosteringSetup/bin
+AutoRosteringSetup/obj
+AutoRosteringSetup/obj/Debug
+AutoRosteringSetup/obj/Release
+CustomAction/bin
+CustomAction/obj
+packages
+AutoRostering/*

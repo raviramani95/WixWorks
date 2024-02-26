@@ -1,0 +1,66 @@
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - '.github/workflows/autorostering_msi.yaml'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+        
+    steps:      
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    
+    - name: convert to utf-8
+      working-directory: ./WEB/Backend/ESolve/ESolve
+      run: sed -i '1s/^\xEF\xBB\xBF//' migrations.sql
+
+    - name: Publish setup artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: migrations.sql
+        path: ${{github.workspace}}/WEB/Backend/ESolve/ESolve/migrations.sql
+
+    # - name: Copy files to root and create AR folder
+    #   run: |
+    #     mkdir AutoRostering
+    #     mkdir AutoRostering/api
+    #     cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./AutoRostering/api/
+    #     cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
+    #     cp -r ./WEB/Frontend/dist/* ./AutoRostering/
+        
+    # - name: setup .net core
+    #   uses: actions/setup-dotnet@v3
+    #   with:
+    #     dotnet-version: 6.0.x
+
+    # - name: Build MSI
+    #   working-directory: ${{github.workspace}}
+    #   run: dotnet build AutoRosteringSetup.sln -c Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
+  
+    # - name: Copy files to root and create AR folder
+    #   run: |
+    #     mkdir AutoRostering
+    #     mkdir AutoRostering/api
+    #     cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./AutoRostering/api/
+    #     cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
+    #     cp -r ./WEB/Frontend/dist/* ./AutoRostering/
+      
+    # - name: Setup MS Build
+    #   uses: microsoft/setup-msbuild@v1.1
+      
+    # - name: Setup NuGet
+    #   uses: NuGet/setup-nuget@v1.0.5 
+
+    # - name: Restore NuGet packages
+    #   working-directory: ${{github.workspace}}
+    #   run: nuget restore AutoRosteringSetup.sln
+      
+    # - name: Build AR msi
+    #   working-directory: ${{github.workspace}}
+    #   run: msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0 

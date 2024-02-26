@@ -1,0 +1,78 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util" xmlns:iis="http://wixtoolset.org/schemas/v4/wxs/iis">
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="INETPUB" Name="Inetpub">
+				<Directory Id="WWWROOT" Name="Wwwroot">
+					<!---->
+					<!-- Will reference to c:\Inetpub\Wwwroot\AutoRostering-->
+					<!---->
+					<Directory Id="INSTALLFOLDER" Name="AutoRostering" ComponentGuidGenerationSeed="{7A8C2E50-5662-4AEB-A40E-8B33576A3037}">
+
+						<!---->
+						<!--Directory under install folder-->
+						<!---->
+						<Directory Id="ApiFolder" Name="api">
+							<Directory Id="LogFolder" Name="Logs" />
+						</Directory>
+
+						<!---->
+						<!-- Registry values read/write - map to entries in Properties.wxi -->
+						<!---->
+						<Component Id="RegistryValues" Guid="{4BDC32C5-DE10-430F-BA0A-A55F325E72A4}">
+							<RegistryKey Root="HKLM" Key="Software\Advanced\AutoRostering">
+								<!--Product details-->
+								<RegistryValue Name="Product" Value="[ProductName]" Type="string" />
+								<RegistryValue Name="Version" Value="[ProductVersion]" Type="string" />
+								<RegistryValue Name="InstallDirPath" Value="[INSTALLFOLDER]" Type="string" />
+
+								<!--Install options details (IIS configuration)-->
+								<RegistryValue Name="WebsiteName" Value="[WEBSITE_NAME]" Type="string" />
+								<RegistryValue Name="VirtualDirectory" Value="[VIRTUAL_DIRECTORY]" Type="string" />
+								<RegistryValue Name="WebsiteIP" Value="[WEBSITE_IP]" Type="string" />
+								<RegistryValue Name="WebsitePort" Value="[WEBSITE_PORT]" Type="string" />
+								<RegistryValue Name="WebsiteHeader" Value="[WEBSITE_HEADER]" Type="string" />
+								<RegistryValue Name="ApplicationPool" Value="[APPLICATION_POOL]" Type="string" />
+								<RegistryValue Name="ExternalUrl" Value="[EXTERNAL_URL]" Type="string" />
+
+								<!--Database connection details-->
+								<RegistryValue Name="DatabaseUser" Value="[DB_USER]" Type="string" />
+								<RegistryValue Name="DatabaseServer" Value="[DB_SERVER]" Type="string" />
+								<RegistryValue Name="DatabaseName" Value="[DB_DATABASE]" Type="string" />
+							</RegistryKey>
+
+							<!-- Create folders -->
+							<CreateFolder Directory="ApiFolder" />
+							<CreateFolder Directory="LogFolder">
+								<util:PermissionEx User="IIS_IUSRS" GenericAll="yes" />
+							</CreateFolder>
+
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+
+			<!---->
+			<!--App Pool-->
+			<!---->
+			<Component Id="SetupAppPool" Guid="{78DD8039-370E-4829-96AB-544494918B30}" Permanent="yes" Directory="TARGETDIR">
+				<iis:WebAppPool Id="ARAppPool" Name="[APPLICATION_POOL]" Identity="applicationPoolIdentity" ManagedPipelineMode="Integrated" ManagedRuntimeVersion="v4.0" />
+			</Component>
+
+			<!---->
+			<!--Virtual Dir-->
+			<!---->
+			<Component Id="SetupVirtualDir" Guid="{CCA97219-1089-462B-AE16-4BCBFE9FE56F}" Directory="TARGETDIR">
+				<!--Virtual Dir install folder-->
+				<iis:WebVirtualDir Id="WebsiteVirtualDir" Alias="[VIRTUAL_DIRECTORY]" Directory="INSTALLFOLDER" WebSite="DefaultWebSite">
+					<iis:WebDirProperties Id="WebsiteVirtualDirProperties" AnonymousAccess="yes" />
+				</iis:WebVirtualDir>
+
+				<!--Virtual dir api folder under install folder-->
+				<iis:WebVirtualDir Id="ApiFolderVirtualDir1" Alias="[VIRTUAL_DIRECTORY]/api" Directory="ApiFolder" WebSite="DefaultWebSite">
+					<!--convert api folder to application-->
+					<iis:WebApplication Id="ARApplication" Name="api" WebAppPool="ARAppPool" />
+				</iis:WebVirtualDir>
+			</Component>
+			</Directory>
+		</Fragment>
+</Wix>

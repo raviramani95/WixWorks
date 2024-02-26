@@ -1,0 +1,75 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:iis="http://wixtoolset.org/schemas/v4/wxs/iis">
+
+	<?include Variables.wxi ?>
+	<?define UpgradeCode="8324f620-8130-49b0-a326-728f8cbdd086" ?>
+	
+	<Package Name="$(var.ProductName) $(var.ProductVersion)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductName)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="200">
+
+		<SummaryInformation Description="$(var.ProductName)" />
+
+		<!---->
+		<!-- Upgrade conditions. First we specify the UpgradeCode from above. -->
+		<!---->
+		<Upgrade Id="$(var.UpgradeCode)">
+
+			 <!--This first check is looking for a newer version of the application than this one. 
+			 If we find one, it means we're trying to install a downgrade. We will prevent this later.--> 
+			<UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND" />
+
+			 <!--The second check looks for any version between the first version and the one we're trying to install. 
+			 Any version found here means we will upgrade.--> 
+			<UpgradeVersion Minimum="1.0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Language="1033" Property="UPGRADEFOUND" />
+
+		</Upgrade>
+
+		<!---->
+		<!--AR application Icon, Background banner and top banner-->
+		<!---->
+		<Icon Id="icon.ico" SourceFile="./assets/AutoRostering.ico" />
+		<WixVariable Id="WixUIDialogBmp" Value="./assets/advanced-background.jpg" />
+		<WixVariable Id="WixUIBannerBmp" Value="./assets/advanced-banner.jpg" />
+
+		<!---->
+		<!--<MediaTemplate EmbedCab="yes"/>-->
+		<!---->
+		<Media Id="1" Cabinet="AutoRostering.cab" EmbedCab="yes" />
+
+		<!---->
+		<!-- Installer pre-requisites (e.g. IIS must be installed.) -->
+		<!---->
+		<?include Conditions.wxi?>
+
+		<!---->
+		<!-- Properties that are referenced throughout the XML -->
+		<!---->
+		<?include Properties.wxi?>
+
+		<!---->
+		<!-- Directory structure and files included in the deployment -->
+		<!---->
+		<DirectoryRef Id="TARGETDIR" />
+
+		<!---->
+		<!-- Features each sub-directory off the root is a feature -->
+		<!---->
+		<FeatureRef Id="ProductFeature" />
+
+		<!---->
+		<!--WebSite-->
+		<!---->
+		<iis:WebSite Id="DefaultWebSite" Description="Default Web Site">
+			<iis:WebAddress Id="AllUnassignedHttps" Port="[WEBSITE_PORT]" IP="[WEBSITE_IP]" Header="[WEBSITE_HEADER]" />
+		</iis:WebSite>
+
+		<!---->
+		<!-- UI -->
+		<!---->
+		<UIRef Id="WixUI_Common" />
+		<UIRef Id="CustomWizard" />
+
+		<!---->
+		<!-- Custom actions -->
+		<!---->
+		<?include CustomActions.wxi?>
+	</Package>
+</Wix>

@@ -1,0 +1,52 @@
+﻿<?include ..\Variables.wxi ?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<UI>
+			<Dialog Id="SuccessDlg" Width="370" Height="270" Title="$(var.ProductName) $(var.ProductVersion) Setup">
+				<!--setup Top banner and Dialog title & Description-->
+				<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="TopBannerBitmap" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="1" />
+				<Control Id="DlgTitle" Type="Text" X="15" Y="6" Width="200" Height="15" TabSkip="no" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}$(var.ProductName) installed successfully" />
+
+				<!--setup Dialog label & control-->
+				<Control Id="ApplicationNameLabel" Type="Text" X="15" Y="65" Width="100" Height="15" TabSkip="no" Text="Application Name :" />
+				<Control Id="ApplicationNameText" Type="Edit" X="115" Y="65" Width="210" Height="15" TabSkip="no" Property="APPLICATION_NAME" Disabled="yes" />
+				
+                <Control Id="InstanceURLLabel" Type="Text" X="15" Y="87" Width="100" Height="15" TabSkip="no" Text="Instance URL :" />
+                <Control Id="InstanceURLText" Type="Edit" X="115" Y="87" Width="210" Height="15" TabSkip="no" Property="INSTANCE_URL" Disabled="yes" />
+                <Control Id="CopyURLButton" Type="PushButton" X="330" Y="85" Width="30" Height="15" Text="Copy">
+					<Publish Event="DoAction" Value="CopyUrlAction" />
+                </Control>
+				
+                <Control Id="InstallationFolderLabel" Type="Text" X="15" Y="109" Width="100" Height="15" TabSkip="no" Text="Installation Folder :" />
+                <Control Id="InstallationFolderText" Type="Edit" X="115" Y="109" Width="210" Height="15" TabSkip="no" Property="INSTALLFOLDER" Disabled="yes" />
+                <Control Id="OpenFolderButton" Type="PushButton" X="330" Y="107" Width="30" Height="15" Text="Open">
+					<Publish Event="DoAction" Value="OpenFolderAction" />
+                </Control>
+				
+                <Control Id="LogFolderLabel" Type="Text" X="15" Y="131" Width="100" Height="15" Text="Installation Log Folder :" />
+                <Control Id="LogFolderText" Type="Edit" X="115" Y="131" Width="210" Height="15" Property="INSTALL_LOG_FOLDER" Text="ravi" Disabled="yes" />
+                <Control Id="OpenLogFileButton" Type="PushButton" X="330" Y="129" Width="30" Height="15" Text="Open">
+					<Publish Event="DoAction" Value="OpenLogFolderAction" />                                  
+				</Control>
+
+				<Control Id="DbBackupFolderLabel" Type="Text" X="15" Y="153" Width="100" Height="15" Text="Database backup folder :" HideCondition="NOT UPGRADEFOUND" />
+				<Control Id="DbBackupFolderText" Type="Edit" X="115" Y="153" Width="210" Height="15" Property="DBBACKUPPATH" Text="test" Disabled="yes" HideCondition="NOT UPGRADEFOUND" />
+				<Control Id="OpenDbBackupFolderButton" Type="PushButton" X="330" Y="151" Width="30" Height="15" Text="Open" HideCondition="NOT UPGRADEFOUND">
+				  
+				  <Publish Event="DoAction" Value="OpenDbBackupFolderAction" />
+				</Control>
+				
+				<!--setup Dialog Push Buttons-->
+				<Control Id="ConnectNow" Type="PushButton" X="230" Y="243" Width="66" Height="17" Default="yes" Text="Connect Now">
+					<Publish Event="DoAction" Value="ConnectNowUrlAction" />
+					<Publish Event="EndDialog" Value="Return" Condition="2" />
+				</Control>
+				<Control Id="Next" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Text="Close">
+					<Publish Event="EndDialog" Value="Return" />
+				</Control>
+			</Dialog>
+		</UI>
+	</Fragment>
+</Wix>

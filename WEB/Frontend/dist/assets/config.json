@@ -1,0 +1,9 @@
+{
+    "API_URL": "https://autorostering.oneadvanced.io/api/",
+    "AUTH_URL": "https://dev.auth.identity.oneadvanced.io/auth/discover",
+    "IDENTITY_URL": "https://dev.identity.oneadvanced.io/auth/realms/",    
+    "Mobile_API_URL": "api/v1/mobile",
+    "MobileAppName" : "Advanced People",
+    "RefreshTokenIntervalMilliSecond" : "240000",
+    "AUTH_BASE_URL": "https://dev.auth.identity.oneadvanced.io/"
+}

@@ -1,0 +1,122 @@
+﻿<Include xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<!---->
+	<!-- Register assembly containing the custom actions -->
+	<!---->
+	<Binary Id="AutoRostering.CustomActions.dll" SourceFile="..\CustomAction\bin\$(Configuration)\net472\CustomAction.CA.dll" />
+
+	<!-- Declare custom actions that will be invoked -->
+	
+	<!---->
+	<!-- Immediate -->
+	<!---->
+	<!--Read registry immediate action-->
+	<CustomAction Id="ReadAutoRosteringRegistryAction" DllEntry="ReadAutoRosteringRegistry" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	
+	<!--success dialog immediate action--> 
+	<CustomAction Id="UpdateSuccessDlgPropertiesAction" DllEntry="UpdateSuccessDlgProperties" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="CopyUrlAction" DllEntry="CopyUrl" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="OpenFolderAction" DllEntry="OpenFolder" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="OpenLogFolderAction" DllEntry="OpenLogFolder" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="ConnectNowUrlAction" DllEntry="OpenConnectNowUrl" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	
+	<!--Run on UnInstall MSI immediate action-->
+	<CustomAction Id="SetPropertyForUninstallAction" DllEntry="SetPropertyForUninstall" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+
+	<!--IIS setup immediate action-->
+	<CustomAction Id="WebsiteSetupAction" DllEntry="WebsiteSetup" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+  <CustomAction Id="TestConnectionAction" DllEntry="TestDatabaseConnection" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+  <CustomAction Id="OpenDbBackupFolderAction" DllEntry="OpenDbBackupFolder" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="SetIisOptionsAction" DllEntry="SetIisOptions" Impersonate="no" Execute="immediate" BinaryRef="AutoRostering.CustomActions.dll" />
+
+	<!---->
+	<!-- Deferred Properties-->
+	<!---->
+	<!--Update Application files deferred action properties-->
+	<CustomAction Id="UpdateApplicationFilesActionSetDataValue" Execute="immediate" Property="UpdateApplicationFilesAction" Value="INSTALLFOLDER=[INSTALLFOLDER];DB_SERVER=[DB_SERVER];DB_DATABASE=[DB_DATABASE];DB_USER=[DB_USER];DB_PASSWORD=[DB_PASSWORD];WEBSITE_HEADER=[WEBSITE_HEADER];VIRTUAL_DIRECTORY=[VIRTUAL_DIRECTORY]" />
+	
+	<!--Run on UnInstall MSI deferred action properties-->
+	<CustomAction Id="RunOnUninstallActionSetDataValue" Property="RunOnUninstallAction" Value="WEBSITE_NAME=[WEBSITE_NAME];APPLICATION_POOL=[APPLICATION_POOL];VIRTUAL_DIRECTORY=[VIRTUAL_DIRECTORY];INSTALLFOLDER=[INSTALLFOLDER]" Execute="immediate" />
+	
+	<!--Backup & Restore deferred action properties-->
+	<CustomAction Id="BackupFilesActionSetDataValue" Property="BackupFilesAction" Value="INSTALLFOLDER=[INSTALLFOLDER]" Execute="immediate" />
+	<CustomAction Id="RestoreFilesActionSetDataValue" Property="RestoreFilesAction" Value="INSTALLFOLDER=[INSTALLFOLDER]" Execute="immediate" />
+  <CustomAction Id="BackupDatabaseSetDataValue" Property="BackupDatabaseAction" Value="DB_SERVER=[DB_SERVER];DB_DATABASE=[DB_DATABASE];DB_USER=[DB_USER];DB_PASSWORD=[DB_PASSWORD];INSTALLED_VERSION=[INSTALLED_VERSION]" Execute="immediate" />
+  <CustomAction Id="ASSOConfigurationSetDataValue" Property="ASSOConfigurationAction" Value="ORG_REF=[ORG_REF];EMAIL_ID=[EMAIL_ID];ADVANCED_ID=[ADVANCED_ID];DB_SERVER=[DB_SERVER];DB_DATABASE=[DB_DATABASE];DB_USER=[DB_USER];DB_PASSWORD=[DB_PASSWORD]" Execute="immediate" />
+
+	<!---->
+	<!-- Deferred -->
+	<!---->
+	<!--Update Application files deferred action-->
+	<CustomAction Id="UpdateApplicationFilesAction" DllEntry="UpdateApplicationFiles" Impersonate="no" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+	<!--Run on UnInstall MSI deferred action-->
+	<CustomAction Id="RunOnUninstallAction" DllEntry="RunOnUninsatll" Impersonate="no" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+	<!--Execute command-->
+	<CustomAction Id="DeleteVirtualDirectoryAction" Directory="INSTALLFOLDER" ExeCommand="[SystemFolder]inetsrv\appcmd.exe delete vdir &quot;Default Web Site/[VIRTUAL_DIRECTORY]&quot;" Impersonate="no" Execute="deferred" Return="ignore" />
+	<CustomAction Id="DeleteIisAppAction" Directory="INSTALLFOLDER" ExeCommand="[SystemFolder]inetsrv\appcmd.exe delete app /app.name:&quot;Default Web Site/[VIRTUAL_DIRECTORY]/api&quot;" Impersonate="no" Execute="deferred" Return="ignore" />
+	<CustomAction Id="StopIisAppPoolAction" Directory="INSTALLFOLDER" ExeCommand="[SystemFolder]inetsrv\appcmd.exe stop apppool /apppool.name:&quot;[APPLICATION_POOL]&quot;" Impersonate="no" Execute="deferred" Return="ignore" />
+	<CustomAction Id="StartIisAppPoolAction" Directory="INSTALLFOLDER" ExeCommand="[SystemFolder]inetsrv\appcmd.exe start apppool /apppool.name:&quot;[APPLICATION_POOL]&quot;" Impersonate="no" Execute="deferred" Return="ignore" />
+	<!--Backup & Restore deferred action-->
+	<CustomAction Id="BackupFilesAction" DllEntry="BackupFiles" Impersonate="no" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="RestoreFilesAction" DllEntry="RestoreFiles" Impersonate="no" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+	<CustomAction Id="BackupDatabaseAction" DllEntry="BackupDatabase" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+  <CustomAction Id="ASSOConfigurationAction" DllEntry="AddSuperAdminUserDetails" Execute="deferred" BinaryRef="AutoRostering.CustomActions.dll" />
+
+	<!---->
+	<!-- Prevent downgrading (versions defined in Product.wxs). -->
+	<!---->
+	<CustomAction Id="PreventDowngrading" Error="A newer version of this application is already installed." />
+
+	<!---->
+	<!-- Declare when the custom actions will be invoked -->
+	<!---->
+	<InstallUISequence>
+		<!-- Read Auto Rostering registry values -->
+		<Custom Action="ReadAutoRosteringRegistryAction" Before="LaunchConditions" Overridable="yes"></Custom>
+
+		<!--Check if we're upgrading a previous version.--> 
+		<Show Dialog="UpgradeDlg" After="FindRelatedProducts" Condition="UPGRADEFOUND" />
+    
+		<!-- Show Success dialog after installation. -->
+		<Custom Action="UpdateSuccessDlgPropertiesAction" After="ExecuteAction" Overridable="yes" Condition="NOT Installed" />
+		<Show Dialog="SuccessDlg" After="UpdateSuccessDlgPropertiesAction" Condition="NOT Installed" />
+		
+		 <!--Prevent downgrading.--> 
+		<Custom Action="PreventDowngrading" After="FindRelatedProducts" Condition="NEWPRODUCTFOUND" />
+    <!--<Custom Action="TestConnectionAction" Before="DatabaseConnectionDlg">TestConnectionButton</Custom>-->
+	</InstallUISequence>
+
+	<!---->
+	<!--Install Execute Sequence-->
+	<!---->
+	<InstallExecuteSequence>
+		<Custom Action="UpdateApplicationFilesActionSetDataValue" After="InstallFiles" Condition="NOT Installed" />
+		<Custom Action="UpdateApplicationFilesAction" After="UpdateApplicationFilesActionSetDataValue" Condition="NOT Installed" />
+		<Custom Action="BackupDatabaseSetDataValue" After="InstallFiles" Condition="UPGRADEFOUND" />
+		<Custom Action="BackupDatabaseAction" After="BackupDatabaseSetDataValue" Condition="UPGRADEFOUND" />
+		
+		<Custom Action="SetIisOptionsAction" Before="InstallInitialize" Condition="(NOT Installed) OR UPGRADEFOUND OR (REMOVE=&quot;ALL&quot;)" />		
+
+		<Custom Action="BackupFilesActionSetDataValue" Before="InstallFiles" Condition="NOT Installed" />
+		<Custom Action="BackupFilesAction" After="BackupFilesActionSetDataValue" Condition="NOT Installed" />
+    
+
+		<Custom Action="RestoreFilesActionSetDataValue" Before="InstallFinalize" Condition="NOT Installed" />
+		<Custom Action="RestoreFilesAction" After="RestoreFilesActionSetDataValue" Condition="NOT Installed" />
+
+		<Custom Action="StopIisAppPoolAction" After="InstallInitialize" Condition="UPGRADEFOUND OR (REMOVE=&quot;ALL&quot;)" />
+		<Custom Action="StartIisAppPoolAction" Before="InstallFinalize" Condition="UPGRADEFOUND OR (REMOVE=&quot;ALL&quot;)" />
+
+		<Custom Action="ASSOConfigurationSetDataValue" After="RestoreFilesAction" Condition="(NOT Installed) AND (NOT UPGRADEFOUND)" />
+    <Custom Action="ASSOConfigurationAction" After="ASSOConfigurationSetDataValue" Condition="(NOT Installed) AND (NOT UPGRADEFOUND)" />
+
+		<Custom Action="PreventDowngrading" After="FindRelatedProducts" Condition="NEWPRODUCTFOUND" />
+		
+		<Custom Action="SetPropertyForUninstallAction" Before="InstallInitialize" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+		<Custom Action="RunOnUninstallActionSetDataValue" Before="InstallFinalize" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+		<Custom Action="RunOnUninstallAction" After="RunOnUninstallActionSetDataValue" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+		<Custom Action="DeleteVirtualDirectoryAction" After="RemoveFiles" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+		<Custom Action="DeleteIisAppAction" After="DeleteVirtualDirectoryAction" Condition="(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=&quot;ALL&quot;)" />
+
+		<RemoveExistingProducts Before="InstallInitialize"></RemoveExistingProducts>
+	</InstallExecuteSequence>
+</Include>

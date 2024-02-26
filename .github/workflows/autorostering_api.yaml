@@ -1,0 +1,45 @@
+name: autorostering-api-build
+
+on:
+  push:
+    branches:
+    - mainn
+    paths:
+    - '.github/workflows/autorostering_api.yaml'
+  pull_request:
+    branches:
+    - mainn
+
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref}}
+
+    - name: Setup MS Build
+      uses: microsoft/setup-msbuild@v1.1
+    
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5 
+    
+    - name: Copy files to root and create AR folder
+      run: |
+        mkdir api
+        cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./api/
+        cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./api/
+
+    # - name: Upload api build artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: api-build 
+    #     path: ./api  
+
+    # - name: call
+    #   uses: '.github/workflows/autorostering_msi.yaml'
+    #   with:
+    #     config-path: .github/labeler.yml
+    #     secrets: inherit

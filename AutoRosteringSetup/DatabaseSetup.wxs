@@ -1,0 +1,21 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util" xmlns:sql="http://wixtoolset.org/schemas/v4/wxs/sql">
+	<Fragment>
+		<util:User Id="SQLUser" Name="[DB_USER]" Password="[DB_PASSWORD]"></util:User> <!--[DB_USER] [DB_PASSWORD]-->
+
+		<DirectoryRef Id="INSTALLFOLDER">
+			<Component Id="SqlComponent" Guid="8A1C82DB-1DD3-4FB5-8600-4F370FE1E04B">
+				<sql:SqlDatabase Id="MySqlDatabase" Database="[DB_DATABASE]" Server="[DB_SERVER]" CreateOnInstall="yes" User="SQLUser" ContinueOnError="no">
+					<sql:SqlScript Id="CreateTablesBin" ExecuteOnInstall="yes" ExecuteOnReinstall="yes" ExecuteOnUninstall="no" BinaryRef="CreateTablesBin" ContinueOnError="no" />
+				</sql:SqlDatabase>
+				<CreateFolder />
+			</Component>
+		</DirectoryRef>
+		<ComponentGroup Id="databaseSetup">
+			<ComponentRef Id="SqlComponent" />
+		</ComponentGroup>
+	</Fragment>
+	<Fragment>
+		<!--passing migrations script file's static path-->
+		<Binary Id="CreateTablesBin" SourceFile="..\AutoRostering\migrations.sql"></Binary>
+	</Fragment>
+</Wix>

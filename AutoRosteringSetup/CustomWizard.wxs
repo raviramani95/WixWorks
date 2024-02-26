@@ -1,0 +1,81 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<UI Id="CustomWizard">
+			<TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+			<TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+			<TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+            <!--<UIRef Id="WixUI_InstallDir"/>-->
+			<Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+			<Property Id="WixUI_Mode" Value="InstallDir" />
+
+			<DialogRef Id="BrowseDlg" />
+			<DialogRef Id="DiskCostDlg" />
+			<DialogRef Id="ErrorDlg" />
+			<DialogRef Id="FatalError" />
+			<DialogRef Id="FilesInUse" />
+			<DialogRef Id="MsiRMFilesInUse" />
+			<DialogRef Id="PrepareDlg" />
+			<DialogRef Id="ProgressDlg" />
+			<DialogRef Id="ResumeDlg" />
+			<DialogRef Id="UserExit" />
+
+			<!---->
+			<!-- Custom dialogs -->
+			<!---->
+			<DialogRef Id="DatabaseConnectionDlg" />
+			<DialogRef Id="InstallationOptionsDlg" />
+			<DialogRef Id="UpgradeDlg" />
+		    <DialogRef Id="ASSOConfigurationDlg" />
+		    <DialogRef Id="ConfirmationDlg" />
+
+			<Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath_$(sys.BUILDARCHSHORT)" Order="3" />
+			<Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4" Condition="WIXUI_INSTALLDIR_VALID&lt;&gt;&quot;1&quot;" />
+
+			<Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />
+
+			<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="ConfirmationDlg" Order="1" Condition="NOT Installed" />
+			<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallationOptionsDlg" Order="2" Condition="NOT Installed AND UPGRADEFOUND" />
+			<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1" Condition="Installed AND PATCH" />
+
+			<Publish Dialog="ConfirmationDlg" Control="Next" Event="NewDialog" Value="InstallationOptionsDlg"></Publish>
+
+			<Publish Dialog="InstallationOptionsDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg"></Publish>
+			<Publish Dialog="InstallationOptionsDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1" />
+			<Publish Dialog="InstallationOptionsDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath_$(sys.BUILDARCHSHORT)" Order="2" Condition="NOT WIXUI_DONTVALIDATEPATH" />
+			<Publish Dialog="InstallationOptionsDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3" Condition="NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID&lt;&gt;&quot;1&quot;" />
+			<Publish Dialog="InstallationOptionsDlg" Control="Next" Event="DoAction" Value="WebsiteSetupAction" Order="4" Condition="EXTERNAL_URL &lt;&gt; &quot;&quot;" />
+			<Publish Dialog="InstallationOptionsDlg" Control="Next" Event="NewDialog" Value="DatabaseConnectionDlg" Order="5" Condition="WEBSITE_NAME &lt;&gt; &quot;&quot; AND VIRTUAL_DIRECTORY &lt;&gt; &quot;&quot; AND EXTERNAL_URL &lt;&gt; &quot;&quot;" />
+			<Publish Dialog="InstallationOptionsDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1" />
+			<Publish Dialog="InstallationOptionsDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2" />
+
+			<Publish Dialog="DatabaseConnectionDlg" Control="Back" Event="NewDialog" Value="InstallationOptionsDlg"></Publish>
+			<Publish Dialog="DatabaseConnectionDlg" Control="Next" Event="NewDialog" Value="ASSOConfigurationDlg" Order="1" 
+					 Condition="DB_SERVER &lt;&gt; &quot;&quot; AND DB_DATABASE &lt;&gt; &quot;&quot; AND DB_USER &lt;&gt; &quot;&quot; AND DB_PASSWORD &lt;&gt; &quot;&quot;" />
+            <Publish Dialog="DatabaseConnectionDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2" Condition="UPGRADEFOUND" />
+      
+		    <Publish Dialog="ASSOConfigurationDlg" Control="Back" Event="NewDialog" Value="DatabaseConnectionDlg" Condition="NOT Installed" />
+		    <Publish Dialog="ASSOConfigurationDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" 
+					 Condition="NOT Installed AND ORG_REF &lt;&gt; &quot;&quot; AND EMAIL_ID &lt;&gt; &quot;&quot; AND ADVANCED_ID &lt;&gt; &quot;&quot;" />
+			
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="ASSOConfigurationDlg" Order="1" Condition="NOT Installed" />
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="DatabaseConnectionDlg" Order="2" Condition="UPGRADEFOUND" />
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3" Condition="Installed AND NOT PATCH" />
+			<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2" Condition="Installed AND PATCH" />
+
+			<Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg" />
+
+			<Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg" />
+			<Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg" />
+			<Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg" />
+
+			<ProgressText Action="ProgressBarText" Message="Install progress bar text" />
+
+			<ComboBox Property="WEBSITE_NAME">
+				<ListItem Value="Default Web Site" />
+			</ComboBox>
+			
+			<Property Id="ARPNOMODIFY" Value="1" />
+		</UI>
+	</Fragment>
+</Wix>

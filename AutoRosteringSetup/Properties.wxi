@@ -1,0 +1,105 @@
+﻿<Include xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+	<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+	<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+	
+	<!---->
+	<!--Top banner bitmap for custom dialog-->
+	<!---->
+	<Binary Id="TopBannerBitmap" SourceFile="./assets/advanced-banner.jpg" />
+
+	<!---->
+	<!--Upgrade properties-->
+	<!---->
+	<Property Id="UPGRADEFOUND" Secure="yes" />
+	<Property Id="NEWPRODUCTFOUND" Secure="yes" />
+
+	<!---->
+	<!-- Default culture to English UK -->
+	<!---->
+	 <Property Id="CULTURE_NAME_LIST" Value="en-GB" Secure="yes" />
+
+	<!---->
+	<!-- IIS version -->
+	<!---->
+	 <Property Id="IIS_MAJOR_VERSION" Secure="yes">
+		<RegistrySearch Id="CheckIISVersion" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp" Name="MajorVersion" Type="raw" />
+	</Property> 
+
+  <!--ASP.NET Core 6 Hosting Bundle-->
+  <Property Id="ASPNET_HOSTING_BUNDLE" Secure="yes">
+    <RegistrySearch Id="CheckHostingBundle" Root="HKLM" Key="SOFTWARE\WOW6432Node\Microsoft\Updates\.NET\Microsoft .NET 6.0.26 - Windows Server Hosting (x86)" Name="InstallerVersion" Type="raw" />
+  </Property>
+	
+	<!---->
+	<!-- Installation option page & Properties that define the IIS web site the application will be installed to -->
+	<!---->
+	<Property Id="INSTALLFOLDER" Secure="yes">
+		<RegistrySearch Id="InstallDiePath" Root="HKLM" Type="raw" Name="InstallDirPath" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="WEBSITE_NAME" Value="Default Web Site"></Property>
+	<Property Id="VIRTUAL_DIRECTORY">
+		<RegistrySearch Id="VirtualDirectory" Root="HKLM" Type="raw" Name="WebsiteUrl" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="USE_DEFAULT_APP_POOL"></Property>
+	<Property Id="APPLICATION_POOL">
+		<RegistrySearch Id="ApplicationPool" Root="HKLM" Type="raw" Name="ApplicationPool" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="EXTERNAL_URL" Secure="yes">
+		<RegistrySearch Id="ExternalUrl" Root="HKLM" Type="raw" Name="ExternalUrl" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	
+	<!---->
+	<!--Website properties-->
+	<!---->
+	<Property Id="WEBSITE_IP" Value="*" Secure="yes">
+		<RegistrySearch Id="WebsiteIP" Root="HKLM" Type="raw" Name="WebsiteIP" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="WEBSITE_PORT" Value="443" Secure="yes">
+		<RegistrySearch Id="WebsitePort" Root="HKLM" Type="raw" Name="WebsitePort" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="WEBSITE_HEADER" Secure="yes">
+		<RegistrySearch Id="WebsiteHeader" Root="HKLM" Type="raw" Name="WebsiteHeader" Key="Software\Advanced\[ProductName]" />
+	</Property>
+
+	<!---->
+	<!--connection string property-->
+	<!---->
+	<Property Id="DB_USER" Secure="yes">
+		<RegistrySearch Id="DatabaseUser" Root="HKLM" Type="raw" Name="DatabaseUser" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="DB_SERVER" Secure="yes">
+		<RegistrySearch Id="DatabaseServer" Root="HKLM" Type="raw" Name="DatabaseServer" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="DB_DATABASE" Secure="yes">
+		<RegistrySearch Id="DatabaseName" Root="HKLM" Type="raw" Name="DatabaseName" Key="Software\Advanced\[ProductName]" />
+	</Property>
+	<Property Id="DB_PASSWORD" Secure="yes" />
+
+  <Property Id="INSTALLED_VERSION" Secure="yes" />
+  <Property Id="DBBACKUPPATH" Value="C:\AutoRosteringBackup\DBBackup" Secure="yes" />
+
+  <Property Id="ORG_REF" Secure="yes" />
+  <Property Id="EMAIL_ID" Secure="yes" />
+  <Property Id="ADVANCED_ID" Secure="yes" />
+	<!---->
+	<!--WIXUI INSTALLDIR-->
+	<!---->
+	<Property Id="WIXUI_INSTALLDIR" Value="WWWROOT" />
+
+	<!---->
+	<!--Success Dialog properties-->
+	<!---->
+	<Property Id="APPLICATION_NAME" Value="$(var.ProductName) Version $(var.ProductVersion)" />
+	<Property Id="INSTANCE_URL" />
+	<Property Id="INSTALL_LOG_FOLDER" />
+
+	<!---->
+	<!-- bitness -->
+	<!---->
+	<?if $(var.Platform) = x64 ?>
+	<Property Id="Is64BitInstall" Value="TRUE" Secure="no" />
+	<?else?>
+	<Property Id="Is64BitInstall" Value="FALSE" Secure="no" />
+	<?endif?>
+</Include>

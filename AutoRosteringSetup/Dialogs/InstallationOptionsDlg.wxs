@@ -1,0 +1,44 @@
+﻿<?include ..\Variables.wxi ?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<UI>
+			<Dialog Id="InstallationOptionsDlg" Width="370" Height="270" Title="$(var.ProductName) $(var.ProductVersion) Setup">
+				<!--setup Top banner and Dialog title & Description-->
+				<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="TopBannerBitmap" />
+				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="1" />
+				<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+				<Control Id="DlgTitle" Type="Text" X="15" Y="6" Width="200" Height="15" TabSkip="no" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Installations Options" />
+				<Control Id="DlgDescription" Type="Text" X="25" Y="23" Width="280" Height="15" TabSkip="no" Transparent="yes" NoPrefix="yes" Text="Set options and press next to install" />
+
+				<!--Folder-->
+				<Control Id="FolderLabel" Type="Text" X="20" Y="51" Width="290" Height="10" Text="Install Path" />
+				<Control Id="Folder" Type="PathEdit" X="20" Y="63" Width="290" Height="18" Property="INSTALLFOLDER" DisableCondition="UPGRADEFOUND" />
+				<Control Id="ChangeFolder" Type="PushButton" X="315" Y="63" Width="50" Height="17" Text="Browse" DisableCondition="UPGRADEFOUND" />
+
+				<!--Website-->
+				<Control Id="WebSiteLabel" Type="Text" X="20" Y="85" Width="290" Height="10" Text="Website" />
+				<Control Id="WebSite" Type="ComboBox" X="20" Y="97" Width="290" Height="18" Property="WEBSITE_NAME" ComboList="yes" Sorted="yes" DisableCondition="UPGRADEFOUND" />
+				
+				<!--Virtual directory-->
+				<Control Id="VirtualDirectoryLabel" Type="Text" X="20" Y="119" Width="290" Height="10" NoPrefix="yes" Text="Virtual Directory" />
+				<Control Id="VirtualDirectory" Type="Edit" X="20" Y="131" Width="290" Height="18" Property="VIRTUAL_DIRECTORY" DisableCondition="UPGRADEFOUND" />
+
+				<!--Application Pool-->
+				<Control Id="UseDefaultAppPool" Type="CheckBox" X="20" Y="153" Width="290" Height="10" Property="USE_DEFAULT_APP_POOL" CheckBoxValue="1" Text="Use a default application pool" DisableCondition="UPGRADEFOUND" />
+				<Control Id="ApplicationPoolLabel" Type="Text" X="20" Y="165" Width="290" Height="10" NoPrefix="yes" Text="Custom Application Pool" DisableCondition="USE_DEFAULT_APP_POOL = 1 OR UPGRADEFOUND" EnableCondition="USE_DEFAULT_APP_POOL &lt;&gt; 1" />
+				<Control Id="ApplicationPool" Type="Edit" X="20" Y="177" Width="290" Height="18" Property="APPLICATION_POOL" DisableCondition="USE_DEFAULT_APP_POOL = 1 OR UPGRADEFOUND" EnableCondition="USE_DEFAULT_APP_POOL &lt;&gt; 1" />
+				
+				<!--External URL-->
+				<Control Id="ExternalUrlLabel" Type="Text" X="20" Y="199" Width="290" Height="10" Text="External URL:" />
+				<Control Id="ExternalUrl" Type="Edit" X="20" Y="211" Width="290" Height="18" Property="EXTERNAL_URL" DisableCondition="UPGRADEFOUND" />
+
+				<!--setup Dialog Push Buttons-->
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back"></Control>
+				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next"></Control>
+				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+					<Publish Event="SpawnDialog" Value="CancelDlg" />
+				</Control>
+			</Dialog>
+		</UI>
+	</Fragment>
+</Wix>

@@ -1,0 +1,120 @@
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="4.0.4" />
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputName>AutoRostering</OutputName>
+    <Name>AutoRosteringSetup</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineConstants>Release</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>Release</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DatabaseSetup.wxs" />
+    <Compile Include="Dialogs\ASSOConfigurationDlg.wxs" />
+    <Compile Include="Dialogs\ConfirmationDlg.wxs" />
+    <Compile Include="Dialogs\DatabaseConnectionDlg.wxs" />
+    <Compile Include="Dialogs\InstallationOptionsDlg.wxs" />
+    <Compile Include="Dialogs\SuccessDlg.wxs" />
+    <Compile Include="Dialogs\UpgradeDlg.wxs" />
+    <Compile Include="Directories.wxs" />
+    <!--<Compile Include="ARFiles_Gen.wxs" />-->
+    <Compile Include="Features.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="CustomWizard.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.4" />
+    <PackageReference Include="WixToolset.Sql.wixext" Version="4.0.4" />
+    <PackageReference Include="WixToolset.Iis.wixext" Version="4.0.4" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
+    <PackageReference Include="WixToolset.Heat" Version="4.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\advanced-background.jpg" />
+    <Content Include="assets\advanced-banner.jpg" />
+    <Content Include="assets\AutoRostering.ico" />
+    <Content Include="Conditions.wxi" />
+    <Content Include="CustomActions.wxi" />
+    <Content Include="Properties.wxi" />
+    <Content Include="Variables.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets" />
+    <Folder Include="Dialogs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomAction\CustomAction.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ContentFile>$(ProjectDir)Directories_Gen.wxs</ContentFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants>SourceDir=..\AutoRostering</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ComponentGroupRef Include="InstallationFiles" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="WixToolset.Sdk" Version="4.0.4" />
+  <ItemGroup>
+    <HarvestDirectory Include="../AutoRostering">
+      <ComponentGroupName>InstallationFiles</ComponentGroupName>
+      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <PreprocessorVariable>SourceDir</PreprocessorVariable>
+	    <HarvestDirectoryAutogenerateGuids>true</HarvestDirectoryAutogenerateGuids>
+      <HarvestDirectoryGenerateGuidsNow>true</HarvestDirectoryGenerateGuidsNow>
+      <SuppressCom>true</SuppressCom>
+      <SuppressRegistry>true</SuppressRegistry>
+      <HarvestDirectorySuppressFragments>true</HarvestDirectorySuppressFragments>
+      <KeepEmptyDirectories>false</KeepEmptyDirectories>
+      <HarvestDirectorySuppressUniqueIds>true</HarvestDirectorySuppressUniqueIds>
+    </HarvestDirectory>
+    <BindPath Include="../AutoRostering" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <!-- <ItemGroup>
+      <HarvestDirectory Include="C:/AutoRostering">
+        <ComponentGroupName>InstallationFiles</ComponentGroupName>
+        <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+        <SuppressRootDirectory>true</SuppressRootDirectory>
+        <PreprocessorVariable>var.SourceDir</PreprocessorVariable>
+        <HarvestDirectoryAutogenerateGuids>$(HarvestAutogenerateGuids)</HarvestDirectoryAutogenerateGuids>
+        <HarvestDirectoryGenerateGuidsNow>$(HarvestGenerateGuidsNow)</HarvestDirectoryGenerateGuidsNow>
+        <SuppressCom>true</SuppressCom>
+        <SuppressRegistry>true</SuppressRegistry>
+        <HarvestDirectorySuppressFragments>true</HarvestDirectorySuppressFragments>
+        <KeepEmptyDirectories>false</KeepEmptyDirectories>
+        <HarvestDirectorySuppressUniqueIds>true</HarvestDirectorySuppressUniqueIds>
+      </HarvestDirectory>
+	  <BindPath Include="C:/AutoRostering" /> 
+  </ItemGroup>-->
+    <!-- <HeatDirectory 
+      Directory="C:\AutoRostering" 
+      OutputFile="$(ContentFile)" 
+      ComponentGroupName="InstallationFiles" 
+      DirectoryRefId="INSTALLFOLDER" 
+      SuppressRootDirectory="true" 
+      PreprocessorVariable="var.SourceDir" 
+      GenerateGuidsNow="true" 
+      SuppressCom="true" 
+      SuppressRegistry="true" 
+      SuppressFragments="true" 
+      KeepEmptyDirectories="false" 
+      SuppressUniqueIds="true" 
+      ToolPath="C:\Program Files (x86)\WiX Toolset v3.11\bin" /> -->
+    <!-- <Exec Command="echo ^&lt;?define SourceDir=&quot;C:\AutoRostering&quot;?^&gt; &gt;&gt; Directories_Gen.wxs" /> -->
+    <!--<Exec Command="&quot;C:\Program Files (x86)\WiX Toolset v3.11\bin\heat.exe&quot; dir C:\AutoRostering -cg InstallationFiles -gg -scom -sreg -sfrag -dr INSTALLFOLDER -var var.SourceDir -srd -ke -suid -out ./Directories_Gen.wxs" />-->
+    <!--<Exec Command="&quot;C:\Program Files (x86)\WiX Toolset v3.11\bin\candle.exe&quot; -dSourceDir=C:\AutoRostering_Release_v1.2.1 ./Directories_Gen.wxs" />-->
+  </Target>
+</Project>

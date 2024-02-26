@@ -1,0 +1,21 @@
+﻿<?include ..\Variables.wxi ?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<UI>
+			<Dialog Id="UpgradeDlg" Width="230" Height="85" Title="$(var.ProductName) $(var.ProductVersion) Setup">				
+				<Control Id="Text" Type="Text" X="18" Y="15" Width="189" Height="30">
+					<Text Value="Setup has detected an existing installation of Advanced Auto Rostering. Please confirm you would like to continue with this upgrade." />
+				</Control>
+
+				<Control Id="ProceedBtn" Type="PushButton" X="42" Y="57" Width="56" Height="17" Default="yes" Text="Proceed">
+					<Publish Event="EndDialog" Value="Return" />
+				</Control>
+
+				<Control Id="CancelBtn" Type="PushButton" X="132" Y="57" Width="56" Height="17" Cancel="yes" Text="Cancel">
+					<Publish Event="EndDialog" Value="Exit" />
+				</Control>
+
+			</Dialog>
+		</UI>
+	</Fragment>
+</Wix>

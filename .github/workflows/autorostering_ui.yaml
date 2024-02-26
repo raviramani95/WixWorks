@@ -1,0 +1,34 @@
+name: autorostering-ui-build
+
+on:
+  push:
+    branches:
+    - mainn
+    paths:
+    - '.github/workflows/autorostering_ui.yaml'
+  pull_request:
+    branches:
+    - mainn
+
+jobs:
+
+  build:
+ 
+    runs-on: windows-latest 
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref}}
+
+    - name: Copy files to root and create AR folder
+      run: |
+        mkdir ui 
+        cp -r ./WEB/Frontend/dist/* ./ui/ 
+
+    # - name: Upload api build artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: ui-build
+    #     path: ./ui
+ 

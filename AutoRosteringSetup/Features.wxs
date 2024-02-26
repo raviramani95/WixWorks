@@ -1,0 +1,11 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<Feature Id="ProductFeature" Title="AutoRosteringSetup" Level="1" Display="expand" ConfigurableDirectory="INSTALLFOLDER">
+			<ComponentGroupRef Id="InstallationFiles" />
+			<ComponentGroupRef Id="databaseSetup" />
+			<ComponentRef Id="SetupAppPool" />
+			<ComponentRef Id="SetupVirtualDir" />
+			<ComponentRef Id="RegistryValues" />
+		</Feature>
+	</Fragment>
+</Wix>
