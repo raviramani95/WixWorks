@@ -8,6 +8,9 @@ on:
 
 env:
   DAY_OF_WEEK: Monday
+  MONTH_JAN: January
+  MONTH_FEB: February
+  MONTH_MAR: March
 
 jobs:
   build:
@@ -20,7 +23,9 @@ jobs:
         ref: ${{ github.event.pull_request.head.ref }}
     
     - name: "Hi, Ravi today is _______"
-      run: echo "Hi, Ravi today is $DAY_OF_WEEK!"
+      run: |
+        echo "Hi, Ravi today is $DAY_OF_WEEK!"
+        echo "Hi, Ravi month is $MONTH_JAN!"
 
   build2:
 
@@ -32,7 +37,9 @@ jobs:
         ref: ${{ github.event.pull_request.head.ref }}
     
     - name: "Hi, build2 today is _______"
-      run: echo "Hi, build2 today is $DAY_OF_WEEK!"
+      run: |
+        echo "Hi, build2 today is $DAY_OF_WEEK!"
+        echo "Hi, build2 month is $MONTH_FEB!"
 
   build3:
 
@@ -44,7 +51,9 @@ jobs:
         ref: ${{ github.event.pull_request.head.ref }}
     
     - name: "Hi, build3 today is _______"
-      run: echo "Hi, build3 today is $DAY_OF_WEEK!"
+      run: |
+        echo "Hi, build3 today is $DAY_OF_WEEK!"
+        echo "Hi, build3 month is $MONTH_MAR!"
 
     # - name: convert to utf-8
     #   working-directory: ./WEB/Backend/ESolve/ESolve
