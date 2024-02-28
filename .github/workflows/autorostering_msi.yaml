@@ -46,7 +46,7 @@ jobs:
       - name: Publish setup artifact
         uses: actions/upload-artifact@v2
         with:
-          name: AutoRostering_${{env.RELEASE_VERSION}.msi
+          name: AutoRostering_${{env.RELEASE_VERSION}}.msi
           path: ${{github.workspace}}/AutoRosteringSetup/bin/x64/Release/AutoRostering.msi
 
   #   runs-on: ubuntu-latest
