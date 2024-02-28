@@ -27,27 +27,29 @@ jobs:
           cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
           cp -r ./WEB/Frontend/dist/* ./AutoRostering/
       
-      - name: Setup MS Build
-        uses: microsoft/setup-msbuild@v1.1
+      # - name: Setup MS Build
+      #   uses: microsoft/setup-msbuild@v1.1
         
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5 
+      # - name: Setup NuGet
+      #   uses: NuGet/setup-nuget@v1.0.5 
 
-      - name: Restore NuGet packages
-        working-directory: ${{github.workspace}}
-        run: nuget restore AutoRosteringSetup.sln
+      # - name: Restore NuGet packages
+      #   working-directory: ${{github.workspace}}
+      #   run: nuget restore AutoRosteringSetup.sln
         
-      - name: Build AR msi
-        working-directory: ${{github.workspace}}
-        run: |
-          msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
-          ren ./AutoRosteringSetup/bin/x64/Release/AutoRostering.msi CustomName.msi
-
-      - name: Publish setup artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: AutoRostering_${{env.RELEASE_VERSION}}.msi
-          path: ${{github.workspace}}/AutoRosteringSetup/bin/x64/Release/AutoRostering.msi
+      # - name: Build AR msi
+      #   working-directory: ${{github.workspace}}
+      #   run: |
+      #     msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
+         
+      - name: Ravi
+        run:  ren ./WEB/Backend/ESolve/ESolve/migrations.sql  CustomName.sql
+        
+      # - name: Publish setup artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: AutoRostering_${{env.RELEASE_VERSION}}.msi
+      #     path: ${{github.workspace}}/AutoRosteringSetup/bin/x64/Release/AutoRostering.msi
 
   #   runs-on: ubuntu-latest
         
