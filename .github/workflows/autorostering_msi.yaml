@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          
+
       - name: Copy files to root and create AR folder
         working-directory: ${{github.workspace}}
         run: |
@@ -39,7 +39,15 @@ jobs:
         
       - name: Build AR msi
         working-directory: ${{github.workspace}}
-        run: msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0 -p:OutputPath="./AutoROsteringSetup/" -p:OutputFileName="DesiredFileName.msi"
+        run: |
+         msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
+         ren ./AutoRosteringSetup/bin/x64/Release/AutoRostering.msi CustomName.msi
+
+      - name: Publish setup artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: AutoRostering_${{env.RELEASE_VERSION}.msi
+          path: ${{github.workspace}}/AutoRosteringSetup/bin/x64/Release/AutoRostering.msi
 
   #   runs-on: ubuntu-latest
         
