@@ -45,11 +45,11 @@ jobs:
       - name: Ravi
         run:  ren ./WEB/Backend/ESolve/ESolve/migrations.sql  CustomName.sql
         
-      # - name: Publish setup artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: AutoRostering_${{env.RELEASE_VERSION}}.msi
-      #     path: ${{github.workspace}}/AutoRosteringSetup/bin/x64/Release/AutoRostering.msi
+      - name: Publish setup artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: CustomName.sql
+          path: ./WEB/Backend/ESolve/ESolve/CustomName.sql
 
   #   runs-on: ubuntu-latest
         
