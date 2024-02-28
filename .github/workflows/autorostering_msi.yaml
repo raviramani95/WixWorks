@@ -12,31 +12,52 @@ env:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    steps:
+      - name: Copy files to root and create AR folder
+        run: |
+          mkdir AutoRostering
+          mkdir AutoRostering/api
+          cp -r ./WEB/Backend/ESolve/ESolve/bin/Release/net6.0/* ./AutoRostering/api/
+          cp -r ./WEB/Backend/ESolve/ESolve/migrations.sql ./AutoRostering/
+          cp -r ./WEB/Frontend/dist/* ./AutoRostering/
+      
+      - name: Setup MS Build
+        uses: microsoft/setup-msbuild@v1.1
         
-    steps:      
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-    
-    - name: Publish setup artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: AutoRostering_${{env.RELEASE_VERSION}.msi
-        path: ${{github.workspace}}/WEB/Backend/ESolve/ESolve/migrations.sql
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5 
 
-  build2:
+      - name: Restore NuGet packages
+        working-directory: ${{github.workspace}}
+        run: nuget restore AutoRosteringSetup.sln
+        
+      - name: Build AR msi
+        working-directory: ${{github.workspace}}
+        run: msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0 -p:OutputPath="./AutoROsteringSetup/" -p:OutputFileName="DesiredFileName.msi"
 
-    runs-on: ubuntu-latest
-    needs: build
-    steps:      
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
+  #   runs-on: ubuntu-latest
+        
+  #   steps:      
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       ref: ${{ github.event.pull_request.head.ref }}
     
-    
+  #   - name: Publish setup artifact
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: AutoRostering_${{env.RELEASE_VERSION}.msi
+  #       path: ${{github.workspace}}/WEB/Backend/ESolve/ESolve/migrations.sql
 
+  # build2:
+
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:      
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       ref: ${{ github.event.pull_request.head.ref }}
+  
 
     # - name: convert to utf-8
     #   working-directory: ./WEB/Backend/ESolve/ESolve
