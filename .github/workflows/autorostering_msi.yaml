@@ -40,8 +40,8 @@ jobs:
       - name: Build AR msi
         working-directory: ${{github.workspace}}
         run: |
-         msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
-         ren ./AutoRosteringSetup/bin/x64/Release/AutoRostering.msi CustomName.msi
+          msbuild AutoRosteringSetup.sln -t:build -verbosity:diag -property:Configuration=Release -p:Platform=x64 -p:Build_Number=21901 -p:VisualStudioVersion=17.0
+          ren ./AutoRosteringSetup/bin/x64/Release/AutoRostering.msi CustomName.msi
 
       - name: Publish setup artifact
         uses: actions/upload-artifact@v2
