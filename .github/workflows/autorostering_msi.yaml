@@ -14,7 +14,12 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          
       - name: Copy files to root and create AR folder
+        working-directory: ${{github.workspace}}
         run: |
           mkdir AutoRostering
           mkdir AutoRostering/api
