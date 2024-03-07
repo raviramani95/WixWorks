@@ -10,12 +10,18 @@ jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Environment: $ENVIRONMENT"
-          echo "Branch: $TAGS"
-        env:
-          TAGS: ${{ github.ref_name }}
-          ENVIRONMENT: ${{ inputs.environment }}
+      - uses: actions/checkout@v3
+      
+      - name: api
+        working-directory: ./AutoRosteringSetup
+        run: 
+          mv ./AutoRosteringSetup/AutoRosteringSetup.wixproj ./AutoRosteringSetup/${{ inputs.environment }}.wixproj
+
+      - name: Publish setup artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: AutoRostering
+          path: ./AutoRosteringSetup/${{ inputs.environment }}.wixproj
 
 # on:
 #   push:
