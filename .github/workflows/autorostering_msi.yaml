@@ -12,9 +12,9 @@ jobs:
     steps:
       - run: |
           echo "Environment: $ENVIRONMENT"
+          echo "Branch: $GITHUB_REF"
         env:
-          LEVEL: ${{ inputs.logLevel }}
-          TAGS: ${{ inputs.tags }}
+          TAGS: ${{ GITHUB_REF }}
           ENVIRONMENT: ${{ inputs.environment }}
 
 # on:
