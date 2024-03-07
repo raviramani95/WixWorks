@@ -15,13 +15,13 @@ jobs:
       - name: api
         working-directory: ./AutoRosteringSetup
         run: 
-          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.environment }}.wixproj
+          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.environment }}_${{ github.ref_name }}.wixproj
 
       - name: Publish setup artifact
         uses: actions/upload-artifact@v2
         with:
           name: AutoRostering
-          path: ./AutoRosteringSetup/${{ inputs.environment }}.wixproj
+          path: ./AutoRosteringSetup/${{ inputs.environment }}_${{ github.ref_name }}.wixproj
 
 # on:
 #   push:
