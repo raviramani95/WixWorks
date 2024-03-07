@@ -15,7 +15,7 @@ jobs:
       - name: api
         working-directory: ./AutoRosteringSetup
         run: 
-          mv ./AutoRosteringSetup/AutoRosteringSetup.wixproj ./AutoRosteringSetup/${{ inputs.environment }}.wixproj
+          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ./AutoRosteringSetup/${{ inputs.environment }}.wixproj
 
       - name: Publish setup artifact
         uses: actions/upload-artifact@v2
