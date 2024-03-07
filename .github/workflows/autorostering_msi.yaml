@@ -1,27 +1,55 @@
+name: autorostering-msi-build
+
 on:
   workflow_dispatch:
     inputs:
-      ENVIRONMENT:
+      environment:
         description: 'Environment to run tests against'
         type: environment
         required: true
 
+env:
+  RELEASE_VERSION: '1.3.0.0'
+  
 jobs:
-  log-the-inputs:
+  build:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'adv-build-svc' }}
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        node-version: [16.x]
+    
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: api
-        working-directory: ./AutoRosteringSetup
-        run: 
-          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref.name }}
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       ENVIRONMENT:
+#         description: 'Environment to run tests against'
+#         type: environment
+#         required: true
 
-      - name: Publish setup artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: AutoRostering
-          path: ./AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
+# jobs:
+#   log-the-inputs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+      
+#       - name: api
+#         working-directory: ./AutoRosteringSetup
+#         run: 
+#           mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
+
+#       - name: Publish setup artifact
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: AutoRostering
+#           path: ./AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
 
 # on:
 #   push:
