@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
     inputs:
-      environment:
+      ENVIRONMENT:
         description: 'Environment to run tests against'
         type: environment
         required: true
@@ -15,13 +15,13 @@ jobs:
       - name: api
         working-directory: ./AutoRosteringSetup
         run: 
-          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.environment }}_${{ github.ref_name }}.wixproj
+          mv ${{github.workspace}}/AutoRosteringSetup/AutoRosteringSetup.wixproj ${{github.workspace}}/AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
 
       - name: Publish setup artifact
         uses: actions/upload-artifact@v2
         with:
           name: AutoRostering
-          path: ./AutoRosteringSetup/${{ inputs.environment }}_${{ github.ref_name }}.wixproj
+          path: ./AutoRosteringSetup/${{ inputs.ENVIRONMENT }}_${{ github.ref_name }}.wixproj
 
 # on:
 #   push:
