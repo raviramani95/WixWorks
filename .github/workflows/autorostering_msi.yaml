@@ -9,6 +9,9 @@ on:
         options:
         - Development
         - Product
+        - Ravi
+        - Vishal
+        - Sonal
 
 jobs:
   log-the-inputs:
