@@ -1,9 +1,14 @@
 on:
   workflow_dispatch:
     inputs:
-      username:
-        description: 'Enter your username'
+      auto-rostering-environment:
+        description: 'Environment'
         required: true
+        default: 'Development'
+        type: choice
+        options:
+        - Development
+        - Product
 
 jobs:
   log-the-inputs:
@@ -12,3 +17,4 @@ jobs:
       - run: |
           echo "Branch: ${{ github.ref_name }}"
           echo "Username: ${{ github.event.inputs.username }}"
+          echo "Environment: ${{ github.event.inputs.auto-rostering-environment }}"
