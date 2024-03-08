@@ -12,6 +12,21 @@ on:
         - Ravi
         - Vishal
         - Sonal
+      username:
+        description: 'Environment'
+        required: true
+        default: 'Ravi'
+        type: choice
+        options:
+        - Ravi
+        - Vishal
+        - Sonal
+      email:
+        description: 'Environment'
+        required: false
+        default: 'ravi.ramani@oneadvanced.com'
+        type: string
+
 
 jobs:
   log-the-inputs:
@@ -21,3 +36,5 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "Username: ${{ github.event.inputs.username }}"
           echo "Environment: ${{ github.event.inputs.auto-rostering-environment }}"
+          echo "Username: ${{ github.event.inputs.username }}"
+          echo "Email: ${{ github.event.inputs.email }}"
