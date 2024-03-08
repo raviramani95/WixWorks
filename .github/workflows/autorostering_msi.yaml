@@ -13,7 +13,7 @@ on:
         - Vishal
         - Sonal
       username:
-        description: 'Environment'
+        description: 'Username'
         required: true
         default: 'Ravi'
         type: choice
@@ -22,7 +22,7 @@ on:
         - Vishal
         - Sonal
       email:
-        description: 'Environment'
+        description: 'Email'
         required: false
         default: 'ravi.ramani@oneadvanced.com'
         type: string
