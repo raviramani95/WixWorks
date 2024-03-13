@@ -44,7 +44,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: AutoRostering_${{ github.event.inputs.release-version }}_${{ github.event.inputs.auto-rostering-environment }}.cs
-        path: ${{github.workspace}}/WixWorks/CustomAction/CustomAction.cs
+        path: ${{github.workspace}}/CustomAction/CustomAction.cs
         
   publish_build:
     runs-on: ubuntu-latest
@@ -52,3 +52,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+
+    - name: Delete artifacts
+      uses: actions/delete-artifact@v2
+      with:
+            name: | 
+              AutoRosteringSetup
+              AutoRostering_${{ github.event.inputs.release-version }}_${{ github.event.inputs.auto-rostering-environment }}.cs
