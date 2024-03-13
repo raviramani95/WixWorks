@@ -56,6 +56,9 @@ jobs:
     - name: Delete artifacts
       uses: actions/delete-artifact@v2
       with:
-        name: | 
-          AutoRosteringSetup
-          AutoRostering_${{ github.event.inputs.release-version }}_${{ github.event.inputs.auto-rostering-environment }}.cs
+        name: AutoRostering
+        
+    - name: Delete msi artifacts
+      uses: actions/delete-artifact@v2
+      with:
+        name: AutoRostering_${{ github.event.inputs.release-version }}_${{ github.event.inputs.auto-rostering-environment }}.cs
